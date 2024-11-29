@@ -1,5 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
+import os
+
+
 
 # Crear la ventana principal
 ventana = tk.Tk()
@@ -7,6 +10,12 @@ ventana.title("Login")
 ventana.geometry("400x300")
 ventana.configure(bg="#2c3e50")  # Fondo oscuro
 
+
+def abrir_nueva_ventana():
+     ventana.destroy()  # Cierra la ventana principal
+     ruta_absoluta = os.path.abspath("Screens/SelectOption.py")  # Obtiene la ruta absoluta
+     os.system(f"python {ruta_absoluta}")
+     
 # Estilo moderno
 style = ttk.Style()
 style.configure("TLabel", background="#2c3e50", foreground="white", font=("Arial", 12))
@@ -33,7 +42,7 @@ contraseña_entry = ttk.Entry(frame, show="*", width=25)
 contraseña_entry.grid(row=1, column=1, pady=5)
 
 # Botón de login
-login_button = ttk.Button(ventana, text="Iniciar sesión")
+login_button = ttk.Button(ventana, text="Iniciar sesión", command= lambda: abrir_nueva_ventana())
 login_button.pack(pady=20)
 
 # Footer
