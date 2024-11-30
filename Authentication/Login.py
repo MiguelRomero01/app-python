@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 import sqlite3
+import importlib.util
 import os
 
 # Crear la base de datos y la tabla si no existen
@@ -40,13 +41,11 @@ def iniciar_sesion():
 
 # Función para abrir la nueva ventana
 def abrir_nueva_ventana():
-    ventana.destroy()  # Cierra la ventana principal
-    ruta_absoluta = os.path.abspath("Screens/SelectOption.py")  # Obtiene la ruta absoluta
-    os.system(f"python {ruta_absoluta}")
-
-# Función para abrir la ventana de registro
-def abrir_registro():
-    os.system("python Authentication/Register.py")  # Abre la pantalla de registro
+    ventana.withdraw()  # Oculta la ventana principal
+    ruta_absoluta = os.path.abspath("Screens/SelectOption.py")
+    spec = importlib.util.spec_from_file_location("modulo_seleccion", ruta_absoluta)
+    modulo = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(modulo)
 
 # Inicializar la base de datos
 inicializar_base_datos()
@@ -96,7 +95,6 @@ register_label = tk.Label(
     font=("Arial", 12, "underline")  # Subrayado para simular enlace
 )
 register_label.pack(pady=10)
-register_label.bind("<Button-1>", lambda e: abrir_registro())  # Vincular el clic izquierdo
 
 # Footer
 footer = ttk.Label(ventana, text="© 2024 Mi Aplicación", font=("Arial", 10, "italic"))
