@@ -7,8 +7,8 @@ import os
 # Crear la ventana principal
 ventana = tk.Tk()
 ventana.title("Login")
-ventana.geometry("400x300")
-ventana.configure(bg="#2c3e50")  # Fondo oscuro
+ventana.geometry("400x350")
+ventana.configure(bg="#3B8C6E")  # Fondo oscuro
 
 
 def abrir_nueva_ventana():
@@ -18,7 +18,7 @@ def abrir_nueva_ventana():
      
 # Estilo moderno
 style = ttk.Style()
-style.configure("TLabel", background="#2c3e50", foreground="white", font=("Arial", 12))
+style.configure("TLabel", background="#3B8C6E", foreground="white", font=("Arial", 12))
 style.configure("TEntry", font=("Arial", 12))
 style.configure("TButton", background="#2980b9", foreground="white", font=("Arial", 12), padding=5)
 
@@ -27,7 +27,7 @@ titulo = ttk.Label(ventana, text="Bienvenido", font=("Arial", 16, "bold"))
 titulo.pack(pady=20)
 
 # Marco central para organizar elementos
-frame = tk.Frame(ventana, bg="#34495e", padx=20, pady=20)
+frame = tk.Frame(ventana, bg="#3B8C6E", padx=20, pady=20)
 frame.pack(pady=10, fill="x", padx=50)
 
 # Etiquetas y campos de entrada

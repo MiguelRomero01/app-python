@@ -33,7 +33,7 @@ def calcular_huella():
 ventana = tk.Tk()
 ventana.title("Cálculo de Huella Hídrica")
 ventana.geometry("600x700")
-ventana.configure(bg="#f0f8ff")
+ventana.configure(bg="#3B8C6E")
 
 # Crear un Canvas con scrollbar
 canvas = tk.Canvas(ventana)

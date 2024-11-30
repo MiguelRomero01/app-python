@@ -10,8 +10,8 @@ def ChangeScreen(path):
 # Crear la nueva ventana
 nueva_ventana = tk.Tk()
 nueva_ventana.title("Options")
-nueva_ventana.geometry("400x300")
-nueva_ventana.configure(bg="#2c3e50")  # Fondo oscuro
+nueva_ventana.geometry("300x300")
+nueva_ventana.configure(bg="#3B8C6E")  # Fondo oscuro
 
      
 # Título
