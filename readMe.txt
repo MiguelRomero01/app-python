@@ -1,6 +1,6 @@
 Lenguaje: Python
 Base de datos: SqLite3
-libreria: Tkinter
+libreria: Tkinter, pillow
 
 Logo: una gota de agua con una hoja encima
 
