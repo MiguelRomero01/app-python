@@ -11,4 +11,6 @@ problema a solucionar:La aplicación "Water Conservation Tracker" aborda el prob
 De acuerdo a la cantidad de agua que se ahorró, decir tambien que cantidad de dinero se ahorró en base al precio del m3 en el pais.
 se hace en base a formularios con opciones y solo va a ser necesario llenarlo una vez. y el resto son recomendaciones o adaptaciones.
 
+pip install matplotlib
+pip install pillow
 
