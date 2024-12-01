@@ -47,12 +47,12 @@ def iniciar_sesion():
 
 # Función para abrir la nueva ventana
 def abrir_nueva_ventana():
+    ventana.withdraw()  # Oculta la ventana principal
     print(f"IMPORTANTEE: Usuario actual asignado en config: {config.usuario_actual}")
     ruta_absoluta = os.path.abspath("Screens/SelectOption.py")
     spec = importlib.util.spec_from_file_location("modulo_seleccion", ruta_absoluta)
     modulo = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(modulo)
-    ventana.destroy()  # Oculta la ventana principal
 
 # Función para abrir la ventana de registro
 def abrir_registro():
