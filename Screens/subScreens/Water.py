@@ -3,7 +3,8 @@ from tkinter import ttk
 import sqlite3
 import os
 import sys
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
+import importlib.util
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 import config 
 
 # Crear ventana principal
@@ -14,10 +15,8 @@ ventana.configure(bg="#3B8C6E")
 
 def actualizar_valor(slider, label_var):
     label_var.set(f"{slider.get():.0f}")
-    print(f"IMPORTANTEE: Usuario actual asignado en config en screen3: {config.usuario_actual}")
 
 def calcular_huella():
-
     print(f"IMPORTANTEE: Usuario actual asignado en config en screen3: {config.usuario_actual}")
     if config.usuario_actual is None:
         resultado_label.config(text="Error: No se detectó un usuario logueado.")
@@ -62,8 +61,17 @@ def calcular_huella():
     resultado_label.config(
         text=f"Tu huella hídrica aproximada es de: {huella_mensual:.2f} litros mensuales."
     )
-
-
+    config.waterScore = True
+    print(config.waterScore)
+def exit():
+    try:
+        ventana.destroy()
+        ruta_absoluta = os.path.abspath(f'Screens/SelectOption.py')
+        spec = importlib.util.spec_from_file_location("modulo_seleccion", ruta_absoluta)
+        modulo = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(modulo)
+    except Exception as e:
+        print(f"Error al cambiar de pantalla: {e}")
 
 
 # Crear estilo personalizado
@@ -162,6 +170,10 @@ carne_combobox.set("Media")  # Valor por defecto
 # Botón para calcular huella hídrica
 calcular_button = ttk.Button(frame, text="Calcular Huella Hídrica", command=calcular_huella)
 calcular_button.pack(pady=20)
+
+#Boton para salir
+salir_button = ttk.Button(frame, text="Salir", command=exit)
+salir_button.pack(pady=20)
 
 # Resultado
 resultado_label = tk.Label(frame, text="", bg="#3B8C6E", font=("Arial", 12), wraplength=550)

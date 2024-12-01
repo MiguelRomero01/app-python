@@ -68,70 +68,56 @@ inicializar_base_datos()
 # Crear la ventana principal
 ventana = tk.Tk()
 ventana.title("Login")
-ventana.geometry("400x350")
+ventana.geometry("400x400")
 ventana.configure(bg="#3B8C6E")  # Fondo oscuro
 
-# Estilo moderno
-style = ttk.Style()
-style.theme_use("clam")  # Usar un tema más moderno
-style.configure("TLabel", background="#3B8C6E", foreground="black", font=("Arial", 12))
-style.configure("TButton", background="#89D99D", foreground="black", font=("Arial", 12), padding=5)
-style.map("TButton", background=[("active", "#3498db")])
-
-# Estilo personalizado para los campos de entrada
-style.configure("TEntry", font=("Arial", 12), fieldbackground="#FFFFFF", foreground="black")  # Establecer el fondo blanco por defecto
-
-# Función para cambiar el fondo del campo de entrada al pasar el mouse
-def on_enter(event):
-    event.widget.configure(style="TEntryHover")  # Cambiar a estilo hover
-
-def on_leave(event):
-    event.widget.configure(style="TEntry")  # Volver al estilo original
-
-# Definir el estilo hover para el campo de entrada
-style.configure("TEntryHover", font=("Arial", 12), fieldbackground="#D3D3D3", foreground="black")  # Fondo gris claro
-
 # Título
-titulo = ttk.Label(ventana, text="Bienvenido", font=("Arial", 16, "bold"))
+titulo = tk.Label(ventana, text="Bienvenido", font=("Arial", 16, "bold"), bg="#3B8C6E", fg="white")
 titulo.pack(pady=20)
 
 # Marco central para organizar elementos
-frame = tk.Frame(ventana, bg="#3B8C6E", padx=20, pady=20)
-frame.pack(pady=10, fill="x", padx=50)
+frame = tk.Frame(ventana, bg="#3B8C6E")
+frame.pack(pady=20)
 
-# Texto de registro interactivo (colocado arriba de los campos)
+# Texto de registro interactivo
 register_label = tk.Label(
     ventana,
     text="¿No tienes cuenta? Regístrate aquí.",
-    fg="#11497a",  # Color azul que resalta
-    cursor="hand2",  # Cambia el cursor a una mano
-    bg="#3B8C6E",  # Fondo igual al de la ventana
-    font=("Arial", 12, "underline")  # Subrayado para simular enlace
+    fg="#11497a",
+    cursor="hand2",
+    bg="#3B8C6E",
+    font=("Arial", 12, "underline")
 )
 register_label.pack(pady=10)
 register_label.bind("<Button-1>", lambda e: abrir_registro())  # Abrir ventana de registro al hacer clic
 
 # Etiquetas y campos de entrada
-usuario_label = ttk.Label(frame, text="Usuario:")
+usuario_label = tk.Label(frame, text="Usuario:", font=("Arial", 12), bg="#3B8C6E", fg="white")
 usuario_label.grid(row=0, column=0, sticky="w", pady=5)
-usuario_entry = ttk.Entry(frame, width=30, font=("Arial", 12))  # Cambiar a ttk.Entry
+usuario_entry = tk.Entry(frame, width=25, font=("Arial", 12))
 usuario_entry.grid(row=0, column=1, pady=5)
-usuario_entry.bind("<Enter>", on_enter)  # Asocia el evento de mouse al campo
-usuario_entry.bind("<Leave>", on_leave)  # Asocia el evento de salida del mouse
 
-contraseña_label = ttk.Label(frame, text="Contraseña:")
+contraseña_label = tk.Label(frame, text="Contraseña:", font=("Arial", 12), bg="#3B8C6E", fg="white")
 contraseña_label.grid(row=1, column=0, sticky="w", pady=5)
-contraseña_entry = ttk.Entry(frame, show="*", width=30, font=("Arial", 12))  # Cambiar a ttk.Entry
+contraseña_entry = tk.Entry(frame, show="*", width=25, font=("Arial", 12))
 contraseña_entry.grid(row=1, column=1, pady=5)
-contraseña_entry.bind("<Enter>", on_enter)  # Asocia el evento de mouse al campo
-contraseña_entry.bind("<Leave>", on_leave)  # Asocia el evento de salida del mouse
 
-# Botón de login con bordes redondeados y color verde
-login_button = ttk.Button(ventana, text="Iniciar sesión", command=iniciar_sesion, width=20, style="TButton")
+# Botón de inicio de sesión
+login_button = tk.Button(
+    ventana,
+    text="Iniciar sesión",
+    command=iniciar_sesion,
+    bg="#89D99D",
+    fg="black",
+    font=("Arial", 12),
+    relief="flat",
+    activebackground="#3498db",
+    width=20
+)
 login_button.pack(pady=20)
 
 # Footer
-footer = ttk.Label(ventana, text="© 2024 Mi Aplicación", font=("Arial", 10, "italic"))
+footer = tk.Label(ventana, text="© 2024 Mi Aplicación", font=("Arial", 10, "italic"), bg="#3B8C6E", fg="white")
 footer.pack(side="bottom", pady=10)
 
 # Iniciar el loop de la aplicación
