@@ -1,14 +1,28 @@
 import tkinter as tk
 from tkinter import ttk
+import sqlite3
+import os
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
+import config 
 
+# Crear ventana principal
+ventana = tk.Tk()
+ventana.title("Cálculo de Huella Hídrica")
+ventana.geometry("500x650")
+ventana.configure(bg="#3B8C6E")
 
 def actualizar_valor(slider, label_var):
-    """Actualiza el valor mostrado en el Label asociado al slider."""
     label_var.set(f"{slider.get():.0f}")
-
+    print(f"IMPORTANTEE: Usuario actual asignado en config en screen3: {config.usuario_actual}")
 
 def calcular_huella():
-    # Obtener valores de los sliders y otros widgets
+
+    print(f"IMPORTANTEE: Usuario actual asignado en config en screen3: {config.usuario_actual}")
+    if config.usuario_actual is None:
+        resultado_label.config(text="Error: No se detectó un usuario logueado.")
+        return
+    
     duchas_diarias = duchas_slider.get()
     tiempo_ducha = tiempo_slider.get()
     tiempo_grifo = grifo_slider.get()
@@ -16,33 +30,41 @@ def calcular_huella():
     veces_lavar_coche = lavar_coche_slider.get()
     consumo_carne = carne_combobox.get()
 
-    # Calcular la huella hídrica mensual (30 días por mes)
-    # Factores ajustados
     flujo_ducha = 10  # litros/minuto
     flujo_grifo = 9  # litros/minuto
     litros_lavadora = 50  # litros por carga
     litros_coche = 150  # litros por lavado
-    carne_dict = {"Alta": 500, "Media": 333, "Baja": 100}  # litros/día según consumo de carne
+    carne_dict = {"Alta": 500, "Media": 333, "Baja": 100}
 
-    # Calcular la huella hídrica mensual (30 días por mes)
     huella_mensual = (
-        duchas_diarias * tiempo_ducha * flujo_ducha * 30  # Consumo en duchas
-        + tiempo_grifo * flujo_grifo * 30  # Consumo del grifo
-        + veces_lavar_ropa * litros_lavadora * 4  # Lavado de ropa (4 semanas)
-        + veces_lavar_coche * litros_coche  # Lavado del coche
-        + carne_dict.get(consumo_carne, 0) * 30  # Consumo de carne
+        duchas_diarias * tiempo_ducha * flujo_ducha * 30 +
+        tiempo_grifo * flujo_grifo * 30 +
+        veces_lavar_ropa * litros_lavadora * 4 +
+        veces_lavar_coche * litros_coche +
+        carne_dict.get(consumo_carne, 0) * 30
     )
-    # Mostrar resultados
+
+     # Actualizar en la base de datos
+    try:
+        conexion = sqlite3.connect("usuarios.db")
+        cursor = conexion.cursor()
+        cursor.execute("""
+            UPDATE usuarios
+            SET waterScore = ?
+            WHERE usuario = ?
+        """, (huella_mensual, config.usuario_actual))
+        conexion.commit()
+        conexion.close()
+    except sqlite3.Error as e:
+        resultado_label.config(text=f"Error al actualizar la base de datos: {e}")
+        return
+
     resultado_label.config(
-        text=f"Tu huella hídrica aproximada es de: {huella_mensual:.2f} litros mensuales. Recuerda que una persona consume en promedio 33000L mensuales"
+        text=f"Tu huella hídrica aproximada es de: {huella_mensual:.2f} litros mensuales."
     )
 
 
-# Crear ventana principal
-ventana = tk.Tk()
-ventana.title("Cálculo de Huella Hídrica")
-ventana.geometry("500x650")
-ventana.configure(bg="#3B8C6E")
+
 
 # Crear estilo personalizado
 style = ttk.Style()

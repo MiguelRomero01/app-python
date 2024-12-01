@@ -2,12 +2,19 @@ import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
 import os
+import sys
+import importlib.util
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
+import config  # Importar el archivo de configuración compartida
 
 def ChangeScreen(path):
+    print(f"IMPORTANTEE: Usuario actual asignado en config pantalla2: {config.usuario_actual}")
     try:
-        nueva_ventana.destroy()
+        nueva_ventana.withdraw()  # Oculta la ventana actual después de cargar el nuevo módulo
         ruta_absoluta = os.path.abspath(f'Screens/{path}')
-        os.system(f"python {ruta_absoluta}")
+        spec = importlib.util.spec_from_file_location("modulo_seleccion", ruta_absoluta)
+        modulo = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(modulo)
     except Exception as e:
         print(f"Error al cambiar de pantalla: {e}")
 
@@ -39,10 +46,10 @@ botones_frame = tk.Frame(nueva_ventana, bg="#3B8C6E")
 botones_frame.pack(pady=10)
 
 # Botones alineados horizontalmente
-energia_button = ttk.Button(botones_frame, text="Energía", command=lambda: ChangeScreen('SubScreens/Energy.py'))
+energia_button = ttk.Button(botones_frame, text="Energía", command=lambda: ChangeScreen('Energy.py'))
 energia_button.grid(row=0, column=0, padx=10)
 
-agua_button = ttk.Button(botones_frame, text="Agua", command=lambda: ChangeScreen('SubScreens/Water.py'))
+agua_button = ttk.Button(botones_frame, text="Agua", command=lambda: ChangeScreen('Water.py'))
 agua_button.grid(row=0, column=1, padx=10)
 
 # Mantener la ventana activa
