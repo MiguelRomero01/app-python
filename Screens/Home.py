@@ -58,8 +58,41 @@ def calcular_gasto():
         print(f"Error al calcular el gasto: {e}")
         return 0, 0
 
-# Función para mostrar la gráfica en una nueva ventana
-def mostrar_grafica():
+# Función para mostrar la gráfica de barras
+def mostrar_grafica_barras():
+    gasto_agua, gasto_electricidad = calcular_gasto()
+    
+    if gasto_agua == 0 and gasto_electricidad == 0:
+        return  # No generar gráfica si no hay datos
+    
+    # Crear una nueva ventana para la gráfica de barras
+    grafica_ventana = tk.Toplevel(home_ventana)
+    grafica_ventana.title("Gráfica de Gastos")
+    grafica_ventana.geometry("600x500")
+
+    # Datos para la gráfica de barras
+    servicios = ['Agua', 'Electricidad']
+    gastos = [gasto_agua, gasto_electricidad]
+    colores = ['blue', 'yellow']  # Colores para cada servicio
+    
+    # Crear una figura para la gráfica de barras
+    fig, ax = plt.subplots(figsize=(5, 4))  # Ajustamos el tamaño de la gráfica
+    
+    ax.bar(servicios, gastos, color=colores)
+    ax.set_xlabel('Tipo de Servicio')
+    ax.set_ylabel('Gasto en Pesos')
+    ax.set_title('Gasto mensual en servicios (Agua y Electricidad)')
+    
+    # Ajustar el límite superior del eje Y
+    ax.set_ylim(0, max(gastos) * 1.2)  # Establecer el valor máximo un 20% más alto que el gasto
+
+    # Mostrar la gráfica en la nueva ventana
+    canvas = FigureCanvasTkAgg(fig, master=grafica_ventana)
+    canvas.draw()
+    canvas.get_tk_widget().pack()
+
+# Función para mostrar la gráfica de pastel
+def mostrar_grafica_pie():
     gasto_agua, gasto_electricidad = calcular_gasto()
     
     if gasto_agua == 0 and gasto_electricidad == 0:
@@ -73,18 +106,12 @@ def mostrar_grafica():
     # Datos para la gráfica
     servicios = ['Agua', 'Electricidad']
     gastos = [gasto_agua, gasto_electricidad]
-    colores = ['blue', 'yellow']  # Colores para cada servicio
     
-    # Crear una figura para la gráfica
+    # Crear una figura para la gráfica de pastel
     fig, ax = plt.subplots(figsize=(5, 4))  # Ajustamos el tamaño de la gráfica
     
-    ax.bar(servicios, gastos, color=colores)
-    ax.set_xlabel('Tipo de Servicio')
-    ax.set_ylabel('Gasto en Pesos')
-    ax.set_title('Gasto mensual en servicios (Agua y Electricidad)')
-    
-    # Ajustar el límite superior del eje Y
-    ax.set_ylim(0, max(gastos) * 1.2)  # Establecer el valor máximo un 20% más alto que el gasto
+    ax.pie(gastos, labels=servicios, autopct='%1.1f%%', colors=['blue', 'yellow'], startangle=90)
+    ax.set_title('Distribución de gasto mensual en servicios')
 
     # Mostrar la gráfica en la nueva ventana
     canvas = FigureCanvasTkAgg(fig, master=grafica_ventana)
@@ -105,9 +132,13 @@ precio_electricidad_label.pack(pady=10)
 precio_electricidad_entry = ttk.Entry(home_ventana, textvariable=precio_electricidad, font=("Arial", 12))
 precio_electricidad_entry.pack(pady=5)
 
-# Botón para mostrar la gráfica
-grafica_button = ttk.Button(home_ventana, text="Calcular y ver grafica", command=mostrar_grafica)
-grafica_button.pack(pady=10)
+# Botón para mostrar la gráfica de barras
+grafica_barras_button = ttk.Button(home_ventana, text="Calcular y ver gráfica de barras", command=mostrar_grafica_barras)
+grafica_barras_button.pack(pady=10)
+
+# Botón para mostrar la gráfica de líneas
+grafica_lineas_button = ttk.Button(home_ventana, text="Calcular y ver gráfico de pie", command=mostrar_grafica_pie)
+grafica_lineas_button.pack(pady=10)
 
 # Mantener la ventana activa
 home_ventana.mainloop()

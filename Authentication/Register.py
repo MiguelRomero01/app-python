@@ -69,8 +69,8 @@ def create_register_window():
     style.theme_use("clam")  # Usar un tema más moderno
     style.configure("TLabel", background="#3B8C6E", foreground="black", font=("Arial", 12))
     style.configure("TEntry", font=("Arial", 12))
-    style.configure("TButton", background="#2980b9", foreground="white", font=("Arial", 12), padding=10)
-    style.map("TButton", background=[("active", "#3498db")])
+    style.configure("TButton", background="#89D99D", foreground="black", font=("Arial", 12), padding=10)
+    style.map("TButton", background=[("active", "#5ebf76")])
 
     # Título de la ventana
     titulo = ttk.Label(register_window, text="Registro de Usuario", font=("Arial", 16, "bold"))

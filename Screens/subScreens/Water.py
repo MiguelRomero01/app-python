@@ -43,7 +43,7 @@ def calcular_huella():
         carne_dict.get(consumo_carne, 0) * 30
     )
 
-     # Actualizar en la base de datos
+    # Actualizar en la base de datos
     try:
         conexion = sqlite3.connect("usuarios.db")
         cursor = conexion.cursor()

@@ -102,6 +102,13 @@ contraseña_label.grid(row=1, column=0, sticky="w", pady=5)
 contraseña_entry = tk.Entry(frame, show="*", width=25, font=("Arial", 12))
 contraseña_entry.grid(row=1, column=1, pady=5)
 
+# Cambiar el color del botón al pasar el mouse
+def on_hover(event):
+    login_button["bg"] = login_button["activebackground"]
+
+def on_leave(event):
+    login_button["bg"] = "#89D99D"  # Restaurar el color original
+
 # Botón de inicio de sesión
 login_button = tk.Button(
     ventana,
@@ -111,10 +118,16 @@ login_button = tk.Button(
     fg="black",
     font=("Arial", 12),
     relief="flat",
-    activebackground="#3498db",
+    activebackground="#5ebf76",  # Color activo
     width=20
 )
+
+# Asociar los eventos
+login_button.bind("<Enter>", on_hover)
+login_button.bind("<Leave>", on_leave)
+
 login_button.pack(pady=20)
+
 
 # Footer
 footer = tk.Label(ventana, text="© 2024 Mi Aplicación", font=("Arial", 10, "italic"), bg="#3B8C6E", fg="white")
