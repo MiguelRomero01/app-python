@@ -1,6 +1,26 @@
 import tkinter as tk
 from tkinter import ttk
+import sqlite3
+import os
+import sys
+import importlib.util
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
+import config 
 
+def actualizar_valor_slider(slider, label):
+    """Actualiza la etiqueta con el valor actual del slider."""
+    valor = slider.get()
+    label.config(text=f"{valor:.0f}")  # Mostrar valor entero
+
+def exit():
+    try:
+        ventana.destroy()
+        ruta_absoluta = os.path.abspath(f'Screens/SelectOption.py')
+        spec = importlib.util.spec_from_file_location("modulo_seleccion", ruta_absoluta)
+        modulo = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(modulo)
+    except Exception as e:
+        print(f"Error al cambiar de pantalla: {e}")
 
 def calcular_huella():
     # Obtener valores de los controles
@@ -35,14 +55,6 @@ ventana.title("Cálculo de Huella Eléctrica")
 ventana.geometry("500x700")
 ventana.configure(bg="#3B8C6E")
 
-# Crear estilo personalizado
-style = ttk.Style()
-style.theme_use("clam")
-style.configure("TScrollbar", troughcolor="#3B8C6E", background="#0B2B40", arrowcolor="white")
-style.configure("TScale", background="#3B8C6E")
-style.configure("TButton", background="#2C3E50", foreground="white", font=("Arial", 10))
-style.configure("TCombobox", fieldbackground="#3B8C6E", background="#3B8C6E")
-
 # Título
 titulo = tk.Label(ventana, text="Calcula tu Huella Eléctrica", font=("Arial", 16, "bold"), bg="#3B8C6E", fg="#0B2B40")
 titulo.pack(pady=10)
@@ -53,6 +65,9 @@ luces_label.pack(anchor="w", padx=20, pady=5)
 luces_slider = ttk.Scale(ventana, from_=0, to=24, orient="horizontal", length=300)
 luces_slider.set(4)
 luces_slider.pack(pady=5, padx=20)
+luces_valor_label = tk.Label(ventana, text="4", bg="#3B8C6E", font=("Arial", 12))
+luces_valor_label.pack()
+luces_slider.configure(command=lambda val: actualizar_valor_slider(luces_slider, luces_valor_label))
 
 # Pregunta 2: Apagas dispositivos
 dispositivos_label = tk.Label(ventana, text="¿Apagas dispositivos cuando no los usas?", bg="#3B8C6E", font=("Arial", 12))
@@ -67,6 +82,9 @@ electrodomesticos_label.pack(anchor="w", padx=20, pady=5)
 electrodomesticos_slider = ttk.Scale(ventana, from_=0, to=14, orient="horizontal", length=300)
 electrodomesticos_slider.set(5)
 electrodomesticos_slider.pack(pady=5, padx=20)
+electrodomesticos_valor_label = tk.Label(ventana, text="5", bg="#3B8C6E", font=("Arial", 12))
+electrodomesticos_valor_label.pack()
+electrodomesticos_slider.configure(command=lambda val: actualizar_valor_slider(electrodomesticos_slider, electrodomesticos_valor_label))
 
 # Pregunta 4: Tipo de bombillas
 bombillas_label = tk.Label(ventana, text="¿Qué tipo de bombillas usas?", bg="#3B8C6E", font=("Arial", 12))
@@ -85,6 +103,10 @@ renovable_combobox.set("No")  # Valor por defecto
 # Botón para calcular
 calcular_button = ttk.Button(ventana, text="Calcular Huella Eléctrica", command=calcular_huella)
 calcular_button.pack(pady=20)
+
+#Boton para salir
+salir_button = ttk.Button(ventana, text="Salir", command=exit)
+salir_button.pack(pady=20)
 
 # Resultado
 resultado_label = tk.Label(ventana, text="", bg="#3B8C6E", font=("Arial", 12), wraplength=450)

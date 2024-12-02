@@ -13,11 +13,12 @@ ventana.title("Cálculo de Huella Hídrica")
 ventana.geometry("500x650")
 ventana.configure(bg="#3B8C6E")
 
+# Función para actualizar el valor mostrado de cada slider
 def actualizar_valor(slider, label_var):
     label_var.set(f"{slider.get():.0f}")
 
 def calcular_huella():
-    print(f"IMPORTANTEE: Usuario actual asignado en config en screen3: {config.usuario_actual}")
+    print(f"IMPORTANTE: Usuario actual asignado en config en screen3: {config.usuario_actual}")
     if config.usuario_actual is None:
         resultado_label.config(text="Error: No se detectó un usuario logueado.")
         return
@@ -63,6 +64,8 @@ def calcular_huella():
     )
     config.waterScore = True
     print(config.waterScore)
+
+# Función para salir y cargar una pantalla diferente
 def exit():
     try:
         ventana.destroy()
@@ -72,7 +75,6 @@ def exit():
         spec.loader.exec_module(modulo)
     except Exception as e:
         print(f"Error al cambiar de pantalla: {e}")
-
 
 # Crear estilo personalizado
 style = ttk.Style()
@@ -93,8 +95,19 @@ canvas.pack(side="left", fill="both", expand=True)
 canvas.create_window((0, 0), window=frame, anchor="nw")
 
 # Título
-titulo = tk.Label(frame, text="Calcula tu Huella Hídrica", font=("Arial", 16, "bold"), bg="#3B8C6E", fg="#0B2B40")
+titulo = tk.Label(frame, text="Calcula tu Huella Hídrica", font=("Arial", 16, "bold"), bg="#3B8C6E", fg="#FFFFFF")
 titulo.pack(pady=10)
+
+# Crear variables para mostrar valores
+def crear_slider(frame, texto, desde, hasta, variable, color="#FFFFFF"):
+    etiqueta = tk.Label(frame, text=texto, bg="#3B8C6E", fg=color, font=("Arial", 12))
+    etiqueta.pack(anchor="w", padx=20, pady=5)
+    slider = ttk.Scale(frame, from_=desde, to=hasta, orient="horizontal", length=300,
+                       command=lambda x: actualizar_valor(slider, variable))
+    slider.pack(pady=5, padx=20)
+    valor_label = tk.Label(frame, textvariable=variable, bg="#3B8C6E", fg=color, font=("Arial", 12))
+    valor_label.pack()
+    return slider
 
 # Variables para mostrar valores
 duchas_valor = tk.StringVar()
@@ -103,6 +116,7 @@ grifo_valor = tk.StringVar()
 ropa_valor = tk.StringVar()
 coche_valor = tk.StringVar()
 lavadora_valor = tk.StringVar()
+
 
 # Pregunta 1: ¿Cuántas duchas tomas al día?
 duchas_label = tk.Label(frame, text="¿Cuántas duchas tomas al día?", bg="#3B8C6E", font=("Arial", 12))
@@ -167,6 +181,13 @@ carne_combobox = ttk.Combobox(frame, values=["Alta", "Media", "Baja"], state="re
 carne_combobox.pack(pady=5, padx=20)
 carne_combobox.set("Media")  # Valor por defecto
 
+# Crear variables y asignar valores iniciales
+duchas_valor.set(f"{duchas_slider.get():.0f}")
+tiempo_valor.set(f"{tiempo_slider.get():.0f}")
+grifo_valor.set(f"{grifo_slider.get():.0f}")
+ropa_valor.set(f"{lavar_ropa_slider.get():.0f}")
+coche_valor.set(f"{lavar_coche_slider.get():.0f}")
+
 # Botón para calcular huella hídrica
 calcular_button = ttk.Button(frame, text="Calcular Huella Hídrica", command=calcular_huella)
 calcular_button.pack(pady=20)
@@ -176,7 +197,7 @@ salir_button = ttk.Button(frame, text="Salir", command=exit)
 salir_button.pack(pady=20)
 
 # Resultado
-resultado_label = tk.Label(frame, text="", bg="#3B8C6E", font=("Arial", 12), wraplength=550)
+resultado_label = tk.Label(frame, text="",  font=("Arial", 12),  wraplength=550)
 resultado_label.pack(pady=10, padx=20)
 
 # Actualizar el área visible para el canvas
