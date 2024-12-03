@@ -42,6 +42,7 @@ def calcular_huella():
         consumo_luces + consumo_dispositivos + consumo_electrodomesticos + consumo_bombillas
     ) * descuento_renovable
 
+    config.EnergyScore = True
     # Mostrar resultados
     resultado_label.config(
         text=f"Tu huella eléctrica estimada es de: {huella_mensual:.2f} kWh mensuales.\n"
