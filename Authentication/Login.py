@@ -130,7 +130,7 @@ login_button.pack(pady=20)
 
 
 # Footer
-footer = tk.Label(ventana, text="© 2024 Mi Aplicación", font=("Arial", 10, "italic"), bg="#3B8C6E", fg="white")
+footer = tk.Label(ventana, text="© 2024 Spring", font=("Arial", 10, "italic"), bg="#3B8C6E", fg="white")
 footer.pack(side="bottom", pady=10)
 
 # Iniciar el loop de la aplicación

@@ -21,7 +21,7 @@ def ChangeScreen(path):
 # Crear la nueva ventana como Toplevel
 nueva_ventana = tk.Toplevel()
 nueva_ventana.title("Options")
-nueva_ventana.geometry("650x770")
+nueva_ventana.geometry("650x790")
 nueva_ventana.configure(bg="#3B8C6E")
 
 imagen = tk.PhotoImage(file="Assets/oit17.png")
