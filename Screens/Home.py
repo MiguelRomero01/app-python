@@ -14,6 +14,15 @@ home_ventana.title("Opciones")
 home_ventana.geometry("500x500")
 home_ventana.configure(bg="#3B8C6E")
 
+# Centrar la ventana
+ancho_ventana = 500
+alto_ventana = 500
+ancho_pantalla = home_ventana.winfo_screenwidth()
+alto_pantalla = home_ventana.winfo_screenheight()
+pos_x = (ancho_pantalla // 2) - (ancho_ventana // 2)
+pos_y = (alto_pantalla // 2) - (alto_ventana // 2)
+home_ventana.geometry(f"{ancho_ventana}x{alto_ventana}+{pos_x}+{pos_y}")
+
 # Título
 titulo = ttk.Label(home_ventana, text="Selecciona una Opción", font=("Arial", 16, "bold"), background="#3B8C6E", foreground="white")
 titulo.pack(pady=20)
@@ -139,6 +148,8 @@ grafica_barras_button.pack(pady=10)
 # Botón para mostrar la gráfica de líneas
 grafica_lineas_button = ttk.Button(home_ventana, text="Calcular y ver gráfico de pie", command=mostrar_grafica_pie)
 grafica_lineas_button.pack(pady=10)
+
+
 
 # Mantener la ventana activa
 home_ventana.mainloop()

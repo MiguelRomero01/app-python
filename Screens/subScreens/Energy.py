@@ -53,11 +53,25 @@ def calcular_huella():
 # Crear ventana principal
 ventana = tk.Tk()
 ventana.title("Cálculo de Huella Eléctrica")
-ventana.geometry("500x700")
+
+# Obtener dimensiones de la pantalla
+screen_width = ventana.winfo_screenwidth()
+screen_height = ventana.winfo_screenheight()
+
+# Establecer el tamaño de la ventana
+window_width = 500
+window_height = 700
+
+# Calcular la posición para centrar la ventana
+x = (screen_width // 2) - (window_width // 2)
+y = (screen_height // 2) - (window_height // 2)
+
+# Configurar la geometría para centrar la ventana
+ventana.geometry(f"{window_width}x{window_height}+{x}+{y}")
 ventana.configure(bg="#3B8C6E")
 
 # Título
-titulo = tk.Label(ventana, text="Calcula tu Huella Eléctrica", font=("Arial", 16, "bold"), bg="#3B8C6E", fg="#0B2B40")
+titulo = tk.Label(ventana, text="Calcula tu Huella Eléctrica", font=("Georgia", 19, "bold"), bg="#3B8C6E", fg="#0B2B40")
 titulo.pack(pady=10)
 
 # Pregunta 1: Horas de luz encendidas

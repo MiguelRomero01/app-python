@@ -10,7 +10,21 @@ import config
 # Crear ventana principal
 ventana = tk.Tk()
 ventana.title("Cálculo de Huella Hídrica")
-ventana.geometry("500x650")
+
+# Obtener dimensiones de la pantalla
+screen_width = ventana.winfo_screenwidth()
+screen_height = ventana.winfo_screenheight()
+
+# Establecer el tamaño de la ventana
+window_width = 500
+window_height = 800
+
+# Calcular la posición para centrar la ventana
+x = (screen_width // 2) - (window_width // 2)
+y = (screen_height // 2) - (window_height // 2)
+
+# Configurar la geometría para centrar la ventana
+ventana.geometry(f"{window_width}x{window_height}+{x}+{y}")
 ventana.configure(bg="#3B8C6E")
 
 # Función para actualizar el valor mostrado de cada slider
@@ -115,89 +129,39 @@ tiempo_valor = tk.StringVar()
 grifo_valor = tk.StringVar()
 ropa_valor = tk.StringVar()
 coche_valor = tk.StringVar()
-lavadora_valor = tk.StringVar()
-
 
 # Pregunta 1: ¿Cuántas duchas tomas al día?
-duchas_label = tk.Label(frame, text="¿Cuántas duchas tomas al día?", bg="#3B8C6E", font=("Arial", 12))
-duchas_label.pack(anchor="w", padx=20, pady=5)
-duchas_slider = ttk.Scale(
-    frame, from_=0, to=5, orient="horizontal", length=300, command=lambda x: actualizar_valor(duchas_slider, duchas_valor)
-)
-duchas_slider.set(1)
-duchas_slider.pack(pady=5, padx=20)
-duchas_valor_label = tk.Label(frame, textvariable=duchas_valor, bg="#3B8C6E", font=("Arial", 12))
-duchas_valor_label.pack()
+duchas_slider = crear_slider(frame, "¿Cuántas duchas tomas al día?", 0, 5, duchas_valor)
 
 # Pregunta 2: ¿Cuánto dura una ducha promedio (en minutos)?
-tiempo_label = tk.Label(frame, text="¿Cuánto dura una ducha promedio (en minutos)?", bg="#3B8C6E", font=("Arial", 12))
-tiempo_label.pack(anchor="w", padx=20, pady=5)
-tiempo_slider = ttk.Scale(
-    frame, from_=0, to=30, orient="horizontal", length=300, command=lambda x: actualizar_valor(tiempo_slider, tiempo_valor)
-)
-tiempo_slider.set(5)
-tiempo_slider.pack(pady=5, padx=20)
-tiempo_valor_label = tk.Label(frame, textvariable=tiempo_valor, bg="#3B8C6E", font=("Arial", 12))
-tiempo_valor_label.pack()
+tiempo_slider = crear_slider(frame, "¿Cuánto dura una ducha promedio (en minutos)?", 0, 30, tiempo_valor)
 
 # Pregunta 3: ¿Cuánto tiempo dejas el grifo abierto diariamente (en minutos)?
-grifo_label = tk.Label(frame, text="¿Cuánto tiempo dejas el grifo abierto diariamente (en minutos)?", bg="#3B8C6E", font=("Arial", 12))
-grifo_label.pack(anchor="w", padx=20, pady=5)
-grifo_slider = ttk.Scale(
-    frame, from_=0, to=60, orient="horizontal", length=300, command=lambda x: actualizar_valor(grifo_slider, grifo_valor)
-)
-grifo_slider.set(10)
-grifo_slider.pack(pady=5, padx=20)
-grifo_valor_label = tk.Label(frame, textvariable=grifo_valor, bg="#3B8C6E", font=("Arial", 12))
-grifo_valor_label.pack()
+grifo_slider = crear_slider(frame, "¿Cuánto tiempo dejas el grifo abierto diariamente (en minutos)?", 0, 60, grifo_valor)
 
 # Pregunta 4: ¿Cuántas veces lavas ropa a la semana?
-ropa_label = tk.Label(frame, text="¿Cuántas veces lavas ropa a la semana?", bg="#3B8C6E", font=("Arial", 12))
-ropa_label.pack(anchor="w", padx=20, pady=5)
-lavar_ropa_slider = ttk.Scale(
-    frame, from_=0, to=10, orient="horizontal", length=300, command=lambda x: actualizar_valor(lavar_ropa_slider, ropa_valor)
-)
-lavar_ropa_slider.set(2)
-lavar_ropa_slider.pack(pady=5, padx=20)
-ropa_valor_label = tk.Label(frame, textvariable=ropa_valor, bg="#3B8C6E", font=("Arial", 12))
-ropa_valor_label.pack()
+lavar_ropa_slider = crear_slider(frame, "¿Cuántas veces lavas ropa a la semana?", 0, 10, ropa_valor)
 
 # Pregunta 5: ¿Si tienes coche, cuántas veces lo lavas al mes?
-coche_label = tk.Label(frame, text="¿Si tienes coche, cuántas veces lo lavas al mes?", bg="#3B8C6E", font=("Arial", 12))
-coche_label.pack(anchor="w", padx=20, pady=5)
-lavar_coche_slider = ttk.Scale(
-    frame, from_=0, to=10, orient="horizontal", length=300, command=lambda x: actualizar_valor(lavar_coche_slider, coche_valor)
-)
-lavar_coche_slider.set(1)
-lavar_coche_slider.pack(pady=5, padx=20)
-coche_valor_label = tk.Label(frame, textvariable=coche_valor, bg="#3B8C6E", font=("Arial", 12))
-coche_valor_label.pack()
+lavar_coche_slider = crear_slider(frame, "¿Si tienes coche, cuántas veces lo lavas al mes?", 0, 10, coche_valor)
 
-
-# Pregunta 7: ¿Cómo describirías tu consumo de carne?
+# Pregunta 6: ¿Cómo describirías tu consumo de carne?
 carne_label = tk.Label(frame, text="¿Cómo describirías tu consumo de carne?", bg="#3B8C6E", font=("Arial", 12))
 carne_label.pack(anchor="w", padx=20, pady=5)
 carne_combobox = ttk.Combobox(frame, values=["Alta", "Media", "Baja"], state="readonly")
 carne_combobox.pack(pady=5, padx=20)
 carne_combobox.set("Media")  # Valor por defecto
 
-# Crear variables y asignar valores iniciales
-duchas_valor.set(f"{duchas_slider.get():.0f}")
-tiempo_valor.set(f"{tiempo_slider.get():.0f}")
-grifo_valor.set(f"{grifo_slider.get():.0f}")
-ropa_valor.set(f"{lavar_ropa_slider.get():.0f}")
-coche_valor.set(f"{lavar_coche_slider.get():.0f}")
-
 # Botón para calcular huella hídrica
 calcular_button = ttk.Button(frame, text="Calcular Huella Hídrica", command=calcular_huella)
 calcular_button.pack(pady=20)
 
-#Boton para salir
+# Botón para salir
 salir_button = ttk.Button(frame, text="Salir", command=exit)
 salir_button.pack(pady=20)
 
 # Resultado
-resultado_label = tk.Label(frame, text="",  font=("Arial", 12),  wraplength=550)
+resultado_label = tk.Label(frame, text="", font=("Arial", 12), wraplength=550, bg="#3B8C6E", fg="white")
 resultado_label.pack(pady=10, padx=20)
 
 # Actualizar el área visible para el canvas

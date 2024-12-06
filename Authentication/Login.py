@@ -47,7 +47,7 @@ def iniciar_sesion():
 
 # Función para abrir la nueva ventana
 def abrir_nueva_ventana():
-    ventana.withdraw()  # Oculta la ventana principal
+    ventana.withdraw()  # Oculta la ventana principal  
     print(f"IMPORTANTEE: Usuario actual asignado en config: {config.usuario_actual}")
     ruta_absoluta = os.path.abspath("Screens/SelectOption.py")
     spec = importlib.util.spec_from_file_location("modulo_seleccion", ruta_absoluta)
@@ -70,6 +70,19 @@ ventana = tk.Tk()
 ventana.title("Login")
 ventana.geometry("400x400")
 ventana.configure(bg="#3B8C6E")  # Fondo oscuro
+
+# Obtener el tamaño de la pantalla
+ancho_pantalla = ventana.winfo_screenwidth()
+alto_pantalla = ventana.winfo_screenheight()
+ancho_ventana = 400  # Ancho especificado en ventana.geometry
+alto_ventana = 400  # Alto especificado en ventana.geometry
+
+# Calcular la posición centrada
+pos_x = (ancho_pantalla // 2) - (ancho_ventana // 2)
+pos_y = (alto_pantalla // 2) - (alto_ventana // 2)
+
+# Configurar la geometría centrada
+ventana.geometry(f"{ancho_ventana}x{alto_ventana}+{pos_x}+{pos_y}")
 
 # Título
 titulo = tk.Label(ventana, text="Bienvenido", font=("Arial", 16, "bold"), bg="#3B8C6E", fg="white")

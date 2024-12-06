@@ -61,6 +61,16 @@ def create_register_window():
     register_window.geometry("400x400")
     register_window.configure(bg="#3B8C6E")  # Color de fondo original
 
+    # Centrar la ventana
+    ancho_ventana = 400
+    alto_ventana = 400
+    ancho_pantalla = register_window.winfo_screenwidth()
+    alto_pantalla = register_window.winfo_screenheight()
+    pos_x = (ancho_pantalla // 2) - (ancho_ventana // 2)
+    pos_y = (alto_pantalla // 2) - (alto_ventana // 2)
+    register_window.geometry(f"{ancho_ventana}x{alto_ventana}+{pos_x}+{pos_y}")
+
+
     # Inicializar la base de datos
     inicializar_base_datos()
 

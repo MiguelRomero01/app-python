@@ -21,7 +21,21 @@ def ChangeScreen(path):
 # Crear la nueva ventana como Toplevel
 nueva_ventana = tk.Toplevel()
 nueva_ventana.title("Options")
-nueva_ventana.geometry("650x790")
+
+# Obtener el tamaño de la pantalla
+screen_width = nueva_ventana.winfo_screenwidth()
+screen_height = nueva_ventana.winfo_screenheight()
+
+# Establecer el tamaño de la ventana
+window_width = 650
+window_height = 820
+
+# Calcular la posición para centrar la ventana
+x = (screen_width // 2) - (window_width // 2)
+y = (screen_height // 2) - (window_height // 2)
+
+# Configurar la geometría para centrar la ventana
+nueva_ventana.geometry(f"{window_width}x{window_height}+{x}+{y}")
 nueva_ventana.configure(bg="#3B8C6E")
 
 imagen = tk.PhotoImage(file="Assets/oit17.png")
@@ -29,6 +43,7 @@ imagen = tk.PhotoImage(file="Assets/oit17.png")
 # Crear un widget Label y asignarle la imagen
 etiqueta = tk.Label(nueva_ventana, image=imagen)
 etiqueta.pack()
+
 # Título
 titulo = ttk.Label(nueva_ventana, text="Selecciona una Opción", font=("Arial", 16, "bold"), background="#3B8C6E", foreground="white")
 titulo.pack(pady=20)
@@ -47,7 +62,6 @@ agua_button.grid(row=0, column=1, padx=10)
 if(config.waterScore and config.EnergyScore):
     Analysis_button = ttk.Button(botones_frame, text='Descubre tu resultado', command=lambda: ChangeScreen('Home.py'))
     Analysis_button.grid(row=1, column=0, columnspan=2, pady=15, sticky="ew")
-
 
 # Mantener la ventana activa
 nueva_ventana.mainloop()
