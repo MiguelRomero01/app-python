@@ -1,6 +1,5 @@
 import tkinter as tk
 from tkinter import ttk
-import sqlite3
 import os
 import sys
 import importlib.util
@@ -23,32 +22,37 @@ def exit():
         print(f"Error al cambiar de pantalla: {e}")
 
 def calcular_huella():
-    # Obtener valores de los controles
-    horas_luces = luces_slider.get()
-    dispositivos_apagados = dispositivos_combobox.get()
-    frecuencia_electrodomesticos = electrodomesticos_slider.get()
-    tipo_bombillas = bombillas_combobox.get().lower()
-    energia_renovable = renovable_combobox.get()
+    """Realiza el cálculo de la huella eléctrica y actualiza el resultado."""
+    try:
+        # Obtener valores de los controles
+        horas_luces = luces_slider.get()
+        dispositivos_apagados = dispositivos_combobox.get()
+        frecuencia_electrodomesticos = electrodomesticos_slider.get()
+        tipo_bombillas = bombillas_combobox.get().lower()
+        energia_renovable = renovable_combobox.get()
 
-    # Factores de consumo estimado
-    consumo_luces = horas_luces * 0.06 * 30  # kWh por luces encendidas (30 días al mes)
-    consumo_dispositivos = 10 if dispositivos_apagados == "Sí" else 20  # kWh mensuales
-    consumo_electrodomesticos = frecuencia_electrodomesticos * 3  # kWh por uso semanal
-    consumo_bombillas = 0 if tipo_bombillas == "led" else (15 if tipo_bombillas == "ahorradores" else 30)
-    descuento_renovable = 0.8 if energia_renovable == "Sí" else 1.0  # Reducción por energía renovable
+        # Factores de consumo estimado
+        consumo_luces = horas_luces * 0.06 * 30  # kWh por luces encendidas (30 días al mes)
+        consumo_dispositivos = 10 if dispositivos_apagados == "Sí" else 20  # kWh mensuales
+        consumo_electrodomesticos = frecuencia_electrodomesticos * 3  # kWh por uso semanal
+        consumo_bombillas = 0 if tipo_bombillas == "led" else (15 if tipo_bombillas == "ahorradores" else 30)
+        descuento_renovable = 0.8 if energia_renovable == "Sí" else 1.0  # Reducción por energía renovable
 
-    # Calcular huella mensual
-    huella_mensual = (
-        consumo_luces + consumo_dispositivos + consumo_electrodomesticos + consumo_bombillas
-    ) * descuento_renovable
+        # Calcular huella mensual
+        huella_mensual = (
+            consumo_luces + consumo_dispositivos + consumo_electrodomesticos + consumo_bombillas
+        ) * descuento_renovable
 
-    config.EnergyScore = True
-    # Mostrar resultados
-    resultado_label.config(
-        text=f"Tu huella eléctrica estimada es de: {huella_mensual:.2f} kWh mensuales.\n"
-             f"Recuerda que el promedio es de 35 kWh mensuales por persona."
-    )
+        config.EnergyScore = True
 
+        # Mostrar resultados junto al promedio
+        promedio_consumo = 35  # Promedio global de consumo mensual
+        resultado_label.config(
+            text=f"Tu huella eléctrica estimada es de: {huella_mensual:.2f} kWh mensuales.\n"
+                 f"El consumo promedio global es de {promedio_consumo} kWh mensuales por persona."
+        )
+    except Exception as e:
+        resultado_label.config(text=f"Error al calcular la huella eléctrica: {e}")
 
 # Crear ventana principal
 ventana = tk.Tk()
@@ -60,7 +64,7 @@ screen_height = ventana.winfo_screenheight()
 
 # Establecer el tamaño de la ventana
 window_width = 500
-window_height = 700
+window_height = 715
 
 # Calcular la posición para centrar la ventana
 x = (screen_width // 2) - (window_width // 2)
@@ -70,62 +74,91 @@ y = (screen_height // 2) - (window_height // 2)
 ventana.geometry(f"{window_width}x{window_height}+{x}+{y}")
 ventana.configure(bg="#3B8C6E")
 
+# Configuración de fuentes
+TITULO_FONT = ("Arial", 18, "bold")
+PREGUNTA_FONT = ("Arial", 12)
+VALOR_FONT = ("Arial", 12, "bold")
+RESULTADO_FONT = ("Arial", 14, "bold")
+INFO_FONT = ("Arial", 13, "bold italic")
+
+# Texto informativo resaltado
+info_frame = tk.Frame(ventana, bg="#2C3E50", padx=10, pady=10, relief="groove")
+info_frame.pack(fill="x", padx=20, pady=10)
+info_label = tk.Label(
+    info_frame,
+    text="La huella eléctrica mide el consumo de energía que usas en tu hogar.",
+    font=INFO_FONT,
+    bg="#2C3E50",
+    fg="#1ABC9C",
+    wraplength=450,
+    justify="center"
+)
+info_label.pack()
+
 # Título
-titulo = tk.Label(ventana, text="Calcula tu Huella Eléctrica", font=("Georgia", 19, "bold"), bg="#3B8C6E", fg="#0B2B40")
-titulo.pack(pady=10)
+titulo = tk.Label(ventana, text="Calcula tu Huella Eléctrica", font=TITULO_FONT, bg="#3B8C6E", fg="#FFFFFF")
+titulo.pack(pady=10, padx=20, anchor="w")
 
-# Pregunta 1: Horas de luz encendidas
-luces_label = tk.Label(ventana, text="¿Cuántas horas al día tienes luces encendidas?", bg="#3B8C6E", font=("Arial", 12))
-luces_label.pack(anchor="w", padx=20, pady=5)
-luces_slider = ttk.Scale(ventana, from_=0, to=24, orient="horizontal", length=300)
-luces_slider.set(4)
-luces_slider.pack(pady=5, padx=20)
-luces_valor_label = tk.Label(ventana, text="4", bg="#3B8C6E", font=("Arial", 12))
-luces_valor_label.pack()
-luces_slider.configure(command=lambda val: actualizar_valor_slider(luces_slider, luces_valor_label))
+# Crear slider con valor al lado derecho
+def crear_slider(padre, texto, desde, hasta, valor_inicial):
+    frame = tk.Frame(padre, bg="#3B8C6E")
+    frame.pack(fill="x", padx=20, pady=5)
 
-# Pregunta 2: Apagas dispositivos
-dispositivos_label = tk.Label(ventana, text="¿Apagas dispositivos cuando no los usas?", bg="#3B8C6E", font=("Arial", 12))
+    label = tk.Label(frame, text=texto, font=PREGUNTA_FONT, bg="#3B8C6E", fg="#FFFFFF")
+    label.grid(row=0, column=0, sticky="w")
+
+    slider = ttk.Scale(frame, from_=desde, to=hasta, orient="horizontal", length=300)
+    slider.set(valor_inicial)
+    slider.grid(row=1, column=0, sticky="w", padx=10)
+
+    valor_label = tk.Label(frame, text=f"{valor_inicial:.0f}", font=VALOR_FONT, bg="#3B8C6E", fg="#FFFFFF")
+    valor_label.grid(row=1, column=1, sticky="e", padx=10)
+
+    slider.configure(command=lambda val: actualizar_valor_slider(slider, valor_label))
+    return slider
+
+# Preguntas
+luces_slider = crear_slider(ventana, "¿Cuántas horas al día tienes luces encendidas?", 0, 24, 4)
+dispositivos_label = tk.Label(ventana, text="¿Apagas dispositivos cuando no los usas?", font=PREGUNTA_FONT, bg="#3B8C6E", fg="#FFFFFF")
 dispositivos_label.pack(anchor="w", padx=20, pady=5)
 dispositivos_combobox = ttk.Combobox(ventana, values=["Sí", "No"], state="readonly")
-dispositivos_combobox.pack(pady=5, padx=20)
-dispositivos_combobox.set("Sí")  # Valor por defecto
+dispositivos_combobox.pack(padx=20, pady=5)
+dispositivos_combobox.set("Sí")
 
-# Pregunta 3: Frecuencia de uso de electrodomésticos
-electrodomesticos_label = tk.Label(ventana, text="¿Cuántas veces usas electrodomésticos a la semana?", bg="#3B8C6E", font=("Arial", 12))
-electrodomesticos_label.pack(anchor="w", padx=20, pady=5)
-electrodomesticos_slider = ttk.Scale(ventana, from_=0, to=14, orient="horizontal", length=300)
-electrodomesticos_slider.set(5)
-electrodomesticos_slider.pack(pady=5, padx=20)
-electrodomesticos_valor_label = tk.Label(ventana, text="5", bg="#3B8C6E", font=("Arial", 12))
-electrodomesticos_valor_label.pack()
-electrodomesticos_slider.configure(command=lambda val: actualizar_valor_slider(electrodomesticos_slider, electrodomesticos_valor_label))
-
-# Pregunta 4: Tipo de bombillas
-bombillas_label = tk.Label(ventana, text="¿Qué tipo de bombillas usas?", bg="#3B8C6E", font=("Arial", 12))
+electrodomesticos_slider = crear_slider(ventana, "¿Cuántas veces usas electrodomésticos a la semana?", 0, 14, 5)
+bombillas_label = tk.Label(ventana, text="¿Qué tipo de bombillas usas?", font=PREGUNTA_FONT, bg="#3B8C6E", fg="#FFFFFF")
 bombillas_label.pack(anchor="w", padx=20, pady=5)
 bombillas_combobox = ttk.Combobox(ventana, values=["LED", "Ahorradores", "Incandescentes"], state="readonly")
-bombillas_combobox.pack(pady=5, padx=20)
-bombillas_combobox.set("LED")  # Valor por defecto
+bombillas_combobox.pack(padx=20, pady=5)
+bombillas_combobox.set("LED")
 
-# Pregunta 5: Energía renovable
-renovable_label = tk.Label(ventana, text="¿Usas energía renovable?", bg="#3B8C6E", font=("Arial", 12))
+renovable_label = tk.Label(ventana, text="¿Usas energía renovable?", font=PREGUNTA_FONT, bg="#3B8C6E", fg="#FFFFFF")
 renovable_label.pack(anchor="w", padx=20, pady=5)
 renovable_combobox = ttk.Combobox(ventana, values=["Sí", "No"], state="readonly")
-renovable_combobox.pack(pady=5, padx=20)
-renovable_combobox.set("No")  # Valor por defecto
+renovable_combobox.pack(padx=20, pady=5)
+renovable_combobox.set("No")
 
 # Botón para calcular
 calcular_button = ttk.Button(ventana, text="Calcular Huella Eléctrica", command=calcular_huella)
-calcular_button.pack(pady=20)
+calcular_button.pack(pady=20, padx=20, anchor="w")
 
-#Boton para salir
+# Resultado resaltado
+resultado_frame = tk.Frame(ventana, bg="#2C3E50", padx=10, pady=10, relief="groove")
+resultado_frame.pack(fill="x", padx=20, pady=10)
+resultado_label = tk.Label(
+    resultado_frame,
+    text="",
+    font=RESULTADO_FONT,
+    bg="#2C3E50",
+    fg="#1ABC9C",
+    wraplength=450,
+    justify="center"
+)
+resultado_label.pack()
+
+# Botón para salir
 salir_button = ttk.Button(ventana, text="Salir", command=exit)
-salir_button.pack(pady=20)
-
-# Resultado
-resultado_label = tk.Label(ventana, text="", bg="#3B8C6E", font=("Arial", 12), wraplength=450)
-resultado_label.pack(pady=10)
+salir_button.pack(pady=20, padx=20, anchor="w")
 
 # Iniciar ventana
 ventana.mainloop()
