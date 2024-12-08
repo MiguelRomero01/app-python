@@ -92,16 +92,18 @@ titulo.pack(pady=20)
 botones_frame = tk.Frame(scrollable_frame, bg="#3B8C6E")
 botones_frame.pack(pady=10)
 
-# Botones alineados horizontalmente
-energia_button = ttk.Button(botones_frame, text="Energía", command=lambda: ChangeScreen('SubScreens/Energy.py'))
-energia_button.grid(row=0, column=0, padx=10)
 
-agua_button = ttk.Button(botones_frame, text="Agua", command=lambda: ChangeScreen('SubScreens/Water.py'))
-agua_button.grid(row=0, column=1, padx=10)
 
 if config.waterScore and config.EnergyScore:
     Analysis_button = ttk.Button(botones_frame, text='Descubre tu resultado', command=lambda: ChangeScreen('Home.py'))
     Analysis_button.grid(row=1, column=0, columnspan=2, pady=15, sticky="ew")
+else:
+    # Botones alineados horizontalmente
+    energia_button = ttk.Button(botones_frame, text="Energía", command=lambda: ChangeScreen('SubScreens/Energy.py'))
+    energia_button.grid(row=0, column=0, padx=10)
+
+    agua_button = ttk.Button(botones_frame, text="Agua", command=lambda: ChangeScreen('SubScreens/Water.py'))
+    agua_button.grid(row=0, column=1, padx=10)
 
 # Asegurarse de que los elementos sean visibles en el área del canvas
 scrollable_frame.update_idletasks()

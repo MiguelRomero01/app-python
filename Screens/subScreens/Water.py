@@ -4,7 +4,8 @@ import sqlite3
 import os
 import sys
 import importlib.util
-
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
+import config  # Importar el archivo de configuración compartida
 # Crear ventana principal
 ventana = tk.Tk()
 ventana.title("Cálculo de Huella Hídrica")
@@ -40,7 +41,8 @@ frame = tk.Frame(canvas, bg="#3B8C6E")
 canvas.configure(yscrollcommand=scrollbar.set)
 scrollbar.pack(side="right", fill="y")
 canvas.pack(side="left", fill="both", expand=True)
-canvas.create_window((0, 0), window=frame, anchor="nw")
+canvas.create_window((0, 0), window=frame, anchor="nw", tags="frame")
+
 
 # Texto informativo resaltado
 info_frame = tk.Frame(frame, bg="#2C3E50", padx=10, pady=10, relief="groove")
@@ -67,6 +69,16 @@ titulo = tk.Label(frame,
                   fg="#FFFFFF")
 titulo.pack(pady=10, padx=20, anchor="w")
 
+def exit():
+    try:
+        ventana.destroy()
+        ruta_absoluta = os.path.abspath(f'Screens/SelectOption.py')
+        spec = importlib.util.spec_from_file_location("modulo_seleccion", ruta_absoluta)
+        modulo = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(modulo)
+    except Exception as e:
+        print(f"Error al cambiar de pantalla: {e}")
+        
 # Función para actualizar el valor mostrado de cada slider
 def actualizar_valor(slider, label_var, valor_label):
     valor_actual = slider.get()
@@ -134,11 +146,13 @@ def calcular_huella():
         veces_lavar_coche * litros_coche +
         carne_dict.get(consumo_carne, 0) * 30
     )
+    
 
     # Muestra el resultado con comparación promedio
     resultado = f"Tu huella hídrica aproximada es de {huella_mensual:.2f} litros mensuales.\n"
     promedio = "El consumo promedio global es de 3000 litros diarios por persona."
     resultado_label.config(text=resultado + promedio)
+    config.waterScore = True
 
 # Botón para calcular huella hídrica
 calcular_button = ttk.Button(frame, text="Calcular Huella Hídrica", command=calcular_huella)
@@ -153,18 +167,22 @@ resultado_label = tk.Label(
     font=RESULTADO_FONT,
     bg="#2C3E50",
     fg="#1ABC9C",
-    wraplength=450,
+    wraplength=450,  # Asegura que el texto no expanda innecesariamente el contenedor
     justify="center"
 )
 resultado_label.pack()
 
 # Botón para salir
-salir_button = ttk.Button(frame, text="Salir", command=ventana.destroy)
+salir_button = ttk.Button(frame, text="Salir", command=exit)
 salir_button.pack(pady=20, anchor="w", padx=20)
 
-# Actualizar área del canvas
-frame.update_idletasks()
-canvas.config(scrollregion=canvas.bbox("all"))
+# Configurar el área de scroll después de actualizar widgets
+def actualizar_scrollregion(event=None):
+    canvas.configure(scrollregion=canvas.bbox("all"))
+    
+frame.bind("<Configure>", actualizar_scrollregion)
+canvas.bind("<Configure>", lambda e: canvas.itemconfig("frame", width=e.width))
+
 
 # Iniciar ventana
 ventana.mainloop()
